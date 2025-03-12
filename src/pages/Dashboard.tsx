@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
+import CustomBadge from "@/components/ui/custom-badge";
 import { 
   LineChart, 
   BarChart, 
@@ -115,9 +116,9 @@ const Dashboard = () => {
                     <div>
                       <div className="flex items-center space-x-2">
                         <h4 className="font-medium">Product Management Fundamentals</h4>
-                        <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">
+                        <CustomBadge variant="outline" className="bg-green-100 text-green-800 border-green-200">
                           94/100
-                        </Badge>
+                        </CustomBadge>
                       </div>
                       <p className="text-sm text-muted-foreground">Completed on May 1, 2023</p>
                     </div>
@@ -304,23 +305,6 @@ const Dashboard = () => {
         </div>
       </main>
     </div>
-  );
-};
-
-// Add Badge component for the dashboard
-const Badge = ({ children, className, variant }: { children: React.ReactNode, className?: string, variant?: "default" | "secondary" | "outline" }) => {
-  const baseClasses = "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium";
-  
-  const variantClasses = {
-    default: "bg-primary text-primary-foreground",
-    secondary: "bg-secondary text-secondary-foreground",
-    outline: "border border-border"
-  };
-  
-  return (
-    <span className={`${baseClasses} ${variant ? variantClasses[variant] : variantClasses.default} ${className}`}>
-      {children}
-    </span>
   );
 };
 
