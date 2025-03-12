@@ -10,7 +10,20 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Clock, User, CheckCircle2, Target, Zap, Calendar } from 'lucide-react';
+import { 
+  Clock, 
+  User, 
+  CheckCircle2, 
+  Target, 
+  Zap, 
+  Calendar, 
+  Briefcase,
+  FileText,
+  AtSign,
+  Github,
+  Linkedin,
+  ExternalLink
+} from 'lucide-react';
 
 export type CandidateProps = {
   id: string;
@@ -24,6 +37,15 @@ export type CandidateProps = {
     level: number;
   }[];
   assessmentScore?: number;
+  currentRole?: string;
+  recommendedLevel?: 'Below Current' | 'At Level' | 'Above Current';
+  resumeUrl?: string;
+  contacts?: {
+    email?: string;
+    github?: string;
+    linkedin?: string;
+    portfolio?: string;
+  };
 };
 
 const CandidateCard = ({ 
@@ -33,7 +55,11 @@ const CandidateCard = ({
   appliedDate, 
   status, 
   skills,
-  assessmentScore 
+  assessmentScore,
+  currentRole,
+  recommendedLevel,
+  resumeUrl,
+  contacts 
 }: CandidateProps) => {
   const getStatusColor = () => {
     switch (status) {
@@ -49,6 +75,19 @@ const CandidateCard = ({
         return 'bg-primary/20 text-primary';
       default:
         return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getLevelColor = () => {
+    switch (recommendedLevel) {
+      case 'Above Current':
+        return 'bg-green-100 text-green-800 border-green-200';
+      case 'At Level':
+        return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'Below Current':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      default:
+        return 'bg-secondary text-secondary-foreground';
     }
   };
 
@@ -80,6 +119,20 @@ const CandidateCard = ({
             {status}
           </Badge>
         </div>
+        
+        {currentRole && (
+          <div className="mb-4 flex items-center justify-between p-3 rounded-lg bg-secondary/50">
+            <div className="flex items-center">
+              <Briefcase className="w-4 h-4 text-primary mr-2" />
+              <span className="text-sm">Current: {currentRole}</span>
+            </div>
+            {recommendedLevel && (
+              <Badge className={`${getLevelColor()} text-xs`}>
+                {recommendedLevel}
+              </Badge>
+            )}
+          </div>
+        )}
         
         <div className="grid grid-cols-2 gap-3 mb-4">
           {skills.slice(0, 4).map((skill, index) => (
@@ -114,22 +167,57 @@ const CandidateCard = ({
           </div>
         )}
         
-        <div className="flex flex-wrap gap-2 mt-2">
-          <Badge variant="outline" className="font-normal bg-secondary/50 hover:bg-secondary text-foreground">
-            <Zap className="w-3 h-3 mr-1" />
-            Quick Learner
-          </Badge>
-          <Badge variant="outline" className="font-normal bg-secondary/50 hover:bg-secondary text-foreground">
-            <CheckCircle2 className="w-3 h-3 mr-1" />
-            Team Player
-          </Badge>
-        </div>
+        {contacts && (
+          <div className="flex flex-wrap gap-2 mt-4">
+            {contacts.email && (
+              <Button variant="outline" size="sm" className="h-8 px-2" asChild>
+                <a href={`mailto:${contacts.email}`} target="_blank" rel="noopener noreferrer">
+                  <AtSign className="w-3.5 h-3.5 mr-1" />
+                  Email
+                </a>
+              </Button>
+            )}
+            {contacts.github && (
+              <Button variant="outline" size="sm" className="h-8 px-2" asChild>
+                <a href={contacts.github} target="_blank" rel="noopener noreferrer">
+                  <Github className="w-3.5 h-3.5 mr-1" />
+                  GitHub
+                </a>
+              </Button>
+            )}
+            {contacts.linkedin && (
+              <Button variant="outline" size="sm" className="h-8 px-2" asChild>
+                <a href={contacts.linkedin} target="_blank" rel="noopener noreferrer">
+                  <Linkedin className="w-3.5 h-3.5 mr-1" />
+                  LinkedIn
+                </a>
+              </Button>
+            )}
+            {contacts.portfolio && (
+              <Button variant="outline" size="sm" className="h-8 px-2" asChild>
+                <a href={contacts.portfolio} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="w-3.5 h-3.5 mr-1" />
+                  Portfolio
+                </a>
+              </Button>
+            )}
+          </div>
+        )}
       </CardContent>
       <CardFooter className="flex justify-between border-t pt-4">
-        <Button variant="outline" size="sm">
-          <User className="w-4 h-4 mr-2" />
-          View Profile
-        </Button>
+        {resumeUrl ? (
+          <Button variant="outline" size="sm" asChild>
+            <a href={resumeUrl} target="_blank" rel="noopener noreferrer">
+              <FileText className="w-4 h-4 mr-2" />
+              View Resume
+            </a>
+          </Button>
+        ) : (
+          <Button variant="outline" size="sm">
+            <User className="w-4 h-4 mr-2" />
+            View Profile
+          </Button>
+        )}
         <Button size="sm">
           Review
         </Button>
