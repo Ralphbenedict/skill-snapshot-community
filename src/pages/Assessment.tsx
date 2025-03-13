@@ -5,15 +5,16 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CustomBadge from "@/components/ui/custom-badge";
-import { FileText, ListChecks, BarChart4, Clock, Award, Target, Palette } from 'lucide-react';
+import { FileText, ListChecks, BarChart4, Clock, Award, Target, Palette, ExternalLink } from 'lucide-react';
 import Header from '@/components/Header';
+import { useNavigate } from 'react-router-dom';
 
 // Define assessment types
 const assessmentTypes = [
   {
     id: 'role-based',
-    title: 'Role-Based Assessment',
-    description: 'Evaluate your skills for specific roles',
+    title: 'Product Principles Assessment',
+    description: 'Evaluate your product management capabilities',
     icon: <FileText className="h-5 w-5 text-primary" />,
     status: 'Recommended'
   },
@@ -161,6 +162,7 @@ const featuredAssessments = {
 
 const Assessment = () => {
   const [selectedAssessment, setSelectedAssessment] = useState('role-based');
+  const navigate = useNavigate();
 
   const handleAssessmentClick = (id: string) => {
     setSelectedAssessment(id);
@@ -168,6 +170,11 @@ const Assessment = () => {
 
   // Get the current featured assessment based on selection
   const currentAssessment = featuredAssessments[selectedAssessment as keyof typeof featuredAssessments];
+
+  const handleStartAssessment = () => {
+    // Open the assessment in a new tab
+    window.open(`/assessment/take/${selectedAssessment}`, '_blank');
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -291,7 +298,10 @@ const Assessment = () => {
                   </Tabs>
                 </CardContent>
                 <CardFooter>
-                  <Button className="w-full">Start Assessment</Button>
+                  <Button className="w-full" onClick={handleStartAssessment}>
+                    Start Assessment
+                    <ExternalLink className="ml-1 h-4 w-4" />
+                  </Button>
                 </CardFooter>
               </Card>
 
