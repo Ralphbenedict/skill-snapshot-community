@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -16,7 +17,7 @@ const assessmentQuestions: Record<string, Question[]> = {
         { id: 'a', text: 'Determining the technical architecture of the product' },
         { id: 'b', text: 'Defining how the product will achieve business goals while meeting user needs' },
         { id: 'c', text: 'Designing the user interface and experience' },
-        { id: 'd', text: 'Managing the development team's workflow' },
+        { id: 'd', text: 'Managing the development team\'s workflow' },
         { id: 'e', text: 'Creating marketing materials for the product' }
       ],
       correctAnswerId: 'b',
