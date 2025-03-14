@@ -158,106 +158,108 @@ const AssessmentResults = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <Button 
-        variant="outline" 
-        className="mb-6" 
-        onClick={handleBackToAssessments}
-      >
-        <ArrowLeft className="mr-2 h-4 w-4" /> Back to Assessments
-      </Button>
-      
-      <Card className="mb-8">
-        <CardHeader>
-          <CardTitle className="text-2xl">Your OCEAN Personality Profile</CardTitle>
-          <CardDescription>
-            The Big Five personality traits represent the most widely accepted model of personality in psychology.
-            Each trait exists on a spectrum and your score indicates where you fall on that spectrum.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="h-96 w-full">
-            <ChartContainer
-              config={{
-                Openness: { color: "#4299E1" },
-                Conscientiousness: { color: "#48BB78" },
-                Extraversion: { color: "#ED8936" },
-                Agreeableness: { color: "#9F7AEA" },
-                Neuroticism: { color: "#F56565" }
-              }}
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart 
-                  data={chartData} 
-                  layout="vertical" 
-                  margin={{ top: 20, right: 60, left: 80, bottom: 20 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
-                  <XAxis 
-                    type="number" 
-                    domain={[0, 100]} 
-                    tickCount={6} 
-                    label={{ value: 'Score (%)', position: 'bottom', dy: 10 }}
-                  />
-                  <YAxis 
-                    dataKey="trait" 
-                    type="category" 
-                    width={90}
-                    tickMargin={10}
-                  />
-                  <Bar dataKey="score" radius={[4, 4, 4, 4]}>
-                    <LabelList 
-                      dataKey="label" 
-                      position="right" 
-                      style={{ fill: "#333", fontWeight: "bold" }} 
-                    />
-                  </Bar>
-                  <ChartTooltip
-                    content={
-                      <ChartTooltipContent 
-                        formatter={(value, name, entry) => {
-                          const item = entry.payload;
-                          return [`${value}% (${item.rawScore}/${item.maxPossible})`, name];
-                        }}
-                      />
-                    }
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </ChartContainer>
-          </div>
-        </CardContent>
-      </Card>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {traitDescriptions.map((trait) => {
-          const score = scores[trait.trait as keyof OceanScores];
-          const rawScore = rawScores[trait.trait as keyof typeof rawScores];
-          
-          return (
-            <Card key={trait.trait}>
-              <CardHeader
-                className="pb-2"
-                style={{ borderBottom: `4px solid ${trait.color}` }}
+    <div className="w-full px-4 py-8 max-w-full">
+      <div className="max-w-7xl mx-auto">
+        <Button 
+          variant="outline" 
+          className="mb-6" 
+          onClick={handleBackToAssessments}
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" /> Back to Assessments
+        </Button>
+        
+        <Card className="mb-8 w-full">
+          <CardHeader>
+            <CardTitle className="text-2xl">Your OCEAN Personality Profile</CardTitle>
+            <CardDescription>
+              The Big Five personality traits represent the most widely accepted model of personality in psychology.
+              Each trait exists on a spectrum and your score indicates where you fall on that spectrum.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-96 w-full">
+              <ChartContainer
+                config={{
+                  Openness: { color: "#4299E1" },
+                  Conscientiousness: { color: "#48BB78" },
+                  Extraversion: { color: "#ED8936" },
+                  Agreeableness: { color: "#9F7AEA" },
+                  Neuroticism: { color: "#F56565" }
+                }}
               >
-                <CardTitle className="text-xl flex items-center justify-between">
-                  {trait.trait}
-                  <span className="text-2xl font-bold">
-                    {score}% ({rawScore}/{trait.maxScore})
-                  </span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-4">
-                <p className="mb-2">
-                  <span className="font-medium">If high:</span> {trait.high}
-                </p>
-                <p>
-                  <span className="font-medium">If low:</span> {trait.low}
-                </p>
-              </CardContent>
-            </Card>
-          );
-        })}
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart 
+                    data={chartData} 
+                    layout="vertical" 
+                    margin={{ top: 20, right: 120, left: 80, bottom: 20 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
+                    <XAxis 
+                      type="number" 
+                      domain={[0, 100]} 
+                      tickCount={6} 
+                      label={{ value: 'Score (%)', position: 'bottom', dy: 10 }}
+                    />
+                    <YAxis 
+                      dataKey="trait" 
+                      type="category" 
+                      width={90}
+                      tickMargin={10}
+                    />
+                    <Bar dataKey="score" radius={[4, 4, 4, 4]}>
+                      <LabelList 
+                        dataKey="label" 
+                        position="right" 
+                        style={{ fill: "#333", fontWeight: "bold" }} 
+                      />
+                    </Bar>
+                    <ChartTooltip
+                      content={
+                        <ChartTooltipContent 
+                          formatter={(value, name, entry) => {
+                            const item = entry.payload;
+                            return [`${value}% (${item.rawScore}/${item.maxPossible})`, name];
+                          }}
+                        />
+                      }
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+          {traitDescriptions.map((trait) => {
+            const score = scores[trait.trait as keyof OceanScores];
+            const rawScore = rawScores[trait.trait as keyof typeof rawScores];
+            
+            return (
+              <Card key={trait.trait} className="w-full">
+                <CardHeader
+                  className="pb-2"
+                  style={{ borderBottom: `4px solid ${trait.color}` }}
+                >
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-xl">{trait.trait}</CardTitle>
+                    <span className="text-2xl font-bold">
+                      {score}% ({rawScore}/{trait.maxScore})
+                    </span>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-4">
+                  <p className="mb-2 text-left">
+                    <span className="font-medium">If high:</span> {trait.high}
+                  </p>
+                  <p className="text-left">
+                    <span className="font-medium">If low:</span> {trait.low}
+                  </p>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
