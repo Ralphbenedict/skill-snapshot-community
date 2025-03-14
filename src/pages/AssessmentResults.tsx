@@ -62,7 +62,7 @@ const traitDescriptions: TraitDescription[] = [
 
 // Custom label component for the bar chart
 const CustomBarLabel = (props: any) => {
-  const { x, y, width, value, fill } = props;
+  const { x, y, width, value, scoreText } = props;
   
   return (
     <Text
@@ -73,9 +73,32 @@ const CustomBarLabel = (props: any) => {
       fontWeight="bold"
       fontSize={14}
     >
-      {value}
+      {scoreText}
     </Text>
   );
+};
+
+// Function to determine which description to show based on score
+const getScoreCategory = (score: number): string => {
+  if (score >= 75) return 'high';
+  if (score <= 25) return 'low';
+  return 'moderate';
+};
+
+// Function to get appropriate description based on score
+const getTraitDescription = (trait: string, score: number): string => {
+  const traitInfo = traitDescriptions.find(t => t.trait === trait);
+  const category = getScoreCategory(score);
+  
+  if (!traitInfo) return '';
+  
+  if (category === 'high') {
+    return traitInfo.high;
+  } else if (category === 'low') {
+    return traitInfo.low;
+  } else {
+    return `You have a balanced level of ${trait.toLowerCase()}. ${traitInfo.high.replace('High', 'Higher')} ${traitInfo.low.replace('Low', 'Lower')}`;
+  }
 };
 
 const AssessmentResults = () => {
@@ -148,7 +171,7 @@ const AssessmentResults = () => {
       rawScore,
       maxPossible,
       fill: traitInfo?.color || "#000000",
-      label: `${score}% (${rawScore}/${maxPossible})`
+      scoreText: `${score}% (${rawScore}/${maxPossible})`
     };
   });
 
@@ -175,7 +198,7 @@ const AssessmentResults = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-full">
+    <div className="container mx-auto px-4 py-8">
       <div className="max-w-7xl mx-auto">
         <Button 
           variant="outline" 
@@ -185,7 +208,7 @@ const AssessmentResults = () => {
           <ArrowLeft className="mr-2 h-4 w-4" /> Back to Assessments
         </Button>
         
-        <Card className="mb-8 w-full">
+        <Card className="mb-8">
           <CardHeader>
             <CardTitle className="text-2xl">Your OCEAN Personality Profile</CardTitle>
             <CardDescription>
@@ -199,19 +222,19 @@ const AssessmentResults = () => {
                 <BarChart 
                   data={chartData} 
                   layout="vertical" 
-                  margin={{ top: 20, right: 150, left: 100, bottom: 20 }}
+                  margin={{ top: 20, right: 180, left: 120, bottom: 30 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
                   <XAxis 
                     type="number" 
                     domain={[0, 100]} 
                     tickCount={6} 
-                    label={{ value: 'Score (%)', position: 'bottom', dy: 10 }}
+                    label={{ value: 'Score (%)', position: 'bottom', offset: 15 }}
                   />
                   <YAxis 
                     dataKey="trait" 
                     type="category"
-                    width={100} 
+                    width={120} 
                     tick={{ fontSize: 14, fontWeight: 'bold' }}
                     tickMargin={10}
                   />
@@ -219,7 +242,7 @@ const AssessmentResults = () => {
                     dataKey="score" 
                     barSize={40}
                     radius={[4, 4, 4, 4]}
-                    label={<CustomBarLabel />}
+                    label={(props) => <CustomBarLabel {...props} scoreText={props.scoreText} />}
                   >
                     {chartData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.fill} />
@@ -231,32 +254,61 @@ const AssessmentResults = () => {
           </CardContent>
         </Card>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {traitDescriptions.map((trait) => {
             const score = scores[trait.trait as keyof OceanScores];
             const rawScore = rawScores[trait.trait as keyof typeof rawScores];
+            const description = getTraitDescription(trait.trait, score);
+            const category = getScoreCategory(score);
             
             return (
               <Card key={trait.trait} className="w-full">
                 <CardHeader
-                  className="pb-2 flex flex-col space-y-1.5"
+                  className="pb-2"
                   style={{ borderBottom: `4px solid ${trait.color}` }}
                 >
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-xl">{trait.trait}</CardTitle>
                     <div className="text-2xl font-bold">
-                      {score}% <span className="text-lg">({rawScore}/{trait.maxScore})</span>
+                      {score}% <span className="text-lg font-medium">({rawScore}/{trait.maxScore})</span>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent className="pt-4">
-                  <p className="mb-3 font-medium">If high: <span className="font-normal">{trait.high}</span></p>
-                  <p className="font-medium">If low: <span className="font-normal">{trait.low}</span></p>
+                  <div className="p-4 rounded-lg bg-slate-50 dark:bg-slate-800">
+                    <p className="text-lg font-medium mb-1">
+                      {category === 'high' 
+                        ? 'You score high in this trait' 
+                        : category === 'low' 
+                          ? 'You score low in this trait' 
+                          : 'You have a balanced score in this trait'}
+                    </p>
+                    <p>{description}</p>
+                  </div>
                 </CardContent>
               </Card>
             );
           })}
         </div>
+
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Understanding Your Results</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4">
+              The OCEAN personality assessment measures five key personality traits. Your scores reflect where you fall on the spectrum for each trait:
+            </p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li><strong>75-100%:</strong> You have a high level of this trait</li>
+              <li><strong>26-74%:</strong> You have a moderate or balanced level of this trait</li>
+              <li><strong>0-25%:</strong> You have a low level of this trait</li>
+            </ul>
+            <p className="mt-4">
+              Remember that there are no "good" or "bad" scores. Each trait combination creates a unique personality profile with its own strengths and challenges.
+            </p>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
