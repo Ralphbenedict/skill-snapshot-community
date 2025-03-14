@@ -20,6 +20,7 @@ interface TraitDescription {
   low: string;
   color: string;
   maxScore: number;
+  scaledMax: number; // Max score for scaled representation (300+ data points reference)
 }
 
 const traitDescriptions: TraitDescription[] = [
@@ -28,35 +29,40 @@ const traitDescriptions: TraitDescription[] = [
     high: "High openness indicates creativity, curiosity, and preference for variety and intellectual stimulation.",
     low: "Low openness suggests preference for routine, traditional values, and practicality.",
     color: "#4299E1", // blue
-    maxScore: 50
+    maxScore: 50,
+    scaledMax: 100
   },
   {
     trait: "Conscientiousness",
     high: "High conscientiousness indicates organization, reliability, self-discipline, and goal-oriented behavior.",
     low: "Low conscientiousness suggests spontaneity, flexibility, and a more relaxed attitude toward goals and standards.",
     color: "#48BB78", // green
-    maxScore: 50
+    maxScore: 50,
+    scaledMax: 100
   },
   {
     trait: "Extraversion",
     high: "High extraversion indicates sociability, assertiveness, and a preference for social interaction.",
     low: "Low extraversion (introversion) suggests preference for solitude, quieter environments, and deeper one-on-one relationships.",
     color: "#ED8936", // orange
-    maxScore: 50
+    maxScore: 50,
+    scaledMax: 100
   },
   {
     trait: "Agreeableness",
     high: "High agreeableness indicates compassion, cooperation, and interest in maintaining harmony with others.",
     low: "Low agreeableness suggests a focus on self-interest, skepticism about others' motives, and competitiveness.",
     color: "#9F7AEA", // purple
-    maxScore: 50
+    maxScore: 50,
+    scaledMax: 100
   },
   {
     trait: "Neuroticism",
     high: "High neuroticism indicates tendency toward negative emotions, sensitivity to stress, and emotional reactivity.",
     low: "Low neuroticism (emotional stability) suggests calmness, resilience to stress, and emotional balance.",
     color: "#F56565", // red
-    maxScore: 50
+    maxScore: 50,
+    scaledMax: 100
   }
 ];
 
@@ -99,6 +105,14 @@ const getTraitDescription = (trait: string, score: number): string => {
   } else {
     return `You have a balanced level of ${trait.toLowerCase()}. ${traitInfo.high.replace('High', 'Higher')} ${traitInfo.low.replace('Low', 'Lower')}`;
   }
+};
+
+// Function to get score range band text
+const getScoreRangeBand = (score: number): string => {
+  if (score >= 76) return 'Score 76-100';
+  if (score >= 51) return 'Score 51-75';
+  if (score >= 26) return 'Score 26-50';
+  return 'Score 0-25';
 };
 
 const AssessmentResults = () => {
@@ -148,6 +162,12 @@ const AssessmentResults = () => {
     return maxPossibleScore > 0 ? Math.round((rawScore / maxPossibleScore) * 100) : 0;
   };
 
+  // Calculate the equivalent score on a larger scale (like the 300+ data points reference)
+  const calculateScaledScore = (rawScore: number, traitInfo: TraitDescription): number => {
+    const scaleFactor = traitInfo.scaledMax / traitInfo.maxScore;
+    return Math.round(rawScore * scaleFactor);
+  };
+
   const scores = calculateScores();
 
   // Get raw scores for each trait
@@ -164,6 +184,7 @@ const AssessmentResults = () => {
     const traitInfo = traitDescriptions.find(t => t.trait === trait);
     const rawScore = rawScores[trait as keyof typeof rawScores];
     const maxPossible = traitInfo?.maxScore || 50;
+    const scaledScore = traitInfo ? calculateScaledScore(rawScore, traitInfo) : 0;
     
     return {
       trait,
@@ -171,7 +192,7 @@ const AssessmentResults = () => {
       rawScore,
       maxPossible,
       fill: traitInfo?.color || "#000000",
-      scoreText: `${score}% (${rawScore}/${maxPossible})`
+      scoreText: `${score}% (${rawScore}/${maxPossible} ≈ ${scaledScore}/${traitInfo?.scaledMax})`
     };
   });
 
@@ -222,7 +243,7 @@ const AssessmentResults = () => {
                 <BarChart 
                   data={chartData} 
                   layout="vertical" 
-                  margin={{ top: 20, right: 180, left: 120, bottom: 30 }}
+                  margin={{ top: 20, right: 200, left: 120, bottom: 30 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
                   <XAxis 
@@ -260,6 +281,8 @@ const AssessmentResults = () => {
             const rawScore = rawScores[trait.trait as keyof typeof rawScores];
             const description = getTraitDescription(trait.trait, score);
             const category = getScoreCategory(score);
+            const scoreRangeBand = getScoreRangeBand(score);
+            const scaledScore = calculateScaledScore(rawScore, trait);
             
             return (
               <Card key={trait.trait} className="w-full">
@@ -267,10 +290,21 @@ const AssessmentResults = () => {
                   className="pb-2"
                   style={{ borderBottom: `4px solid ${trait.color}` }}
                 >
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-xl">{trait.trait}</CardTitle>
-                    <div className="text-2xl font-bold">
-                      {score}% <span className="text-lg font-medium">({rawScore}/{trait.maxScore})</span>
+                  <div className="flex flex-col">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-xl">{trait.trait}</CardTitle>
+                      <div className="text-2xl font-bold">
+                        {score}%
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center mt-2">
+                      <div className="text-sm font-medium text-muted-foreground">Where you stand</div>
+                      <div className="text-sm font-medium">
+                        {scoreRangeBand}
+                      </div>
+                    </div>
+                    <div className="text-sm mt-1">
+                      Raw score: {rawScore}/{trait.maxScore} ≈ {scaledScore}/{trait.scaledMax} on standard scale
                     </div>
                   </div>
                 </CardHeader>
@@ -300,10 +334,15 @@ const AssessmentResults = () => {
               The OCEAN personality assessment measures five key personality traits. Your scores reflect where you fall on the spectrum for each trait:
             </p>
             <ul className="list-disc pl-6 space-y-2">
-              <li><strong>75-100%:</strong> You have a high level of this trait</li>
-              <li><strong>26-74%:</strong> You have a moderate or balanced level of this trait</li>
+              <li><strong>76-100%:</strong> You have a high level of this trait</li>
+              <li><strong>51-75%:</strong> You have a moderately high level of this trait</li>
+              <li><strong>26-50%:</strong> You have a moderately low level of this trait</li>
               <li><strong>0-25%:</strong> You have a low level of this trait</li>
             </ul>
+            <p className="mt-4">
+              Your raw scores (what you answered on our assessment) have been scaled to match industry-standard scoring ranges, 
+              allowing for better comparison with other personality assessments that may use different question counts.
+            </p>
             <p className="mt-4">
               Remember that there are no "good" or "bad" scores. Each trait combination creates a unique personality profile with its own strengths and challenges.
             </p>
