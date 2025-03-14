@@ -3,8 +3,7 @@ import React from 'react';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid, LabelList } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid, Cell, Text } from 'recharts';
 import { ArrowLeft } from 'lucide-react';
 
 interface OceanScores {
@@ -60,6 +59,24 @@ const traitDescriptions: TraitDescription[] = [
     maxScore: 50
   }
 ];
+
+// Custom label component for the bar chart
+const CustomBarLabel = (props: any) => {
+  const { x, y, width, value, fill } = props;
+  
+  return (
+    <Text
+      x={x + width + 5}
+      y={y + 19}
+      fill="#333"
+      textAnchor="start"
+      fontWeight="bold"
+      fontSize={14}
+    >
+      {value}
+    </Text>
+  );
+};
 
 const AssessmentResults = () => {
   const { assessmentId } = useParams();
@@ -158,7 +175,7 @@ const AssessmentResults = () => {
   }
 
   return (
-    <div className="w-full px-4 py-8 max-w-full">
+    <div className="container mx-auto px-4 py-8 max-w-full">
       <div className="max-w-7xl mx-auto">
         <Button 
           variant="outline" 
@@ -178,59 +195,43 @@ const AssessmentResults = () => {
           </CardHeader>
           <CardContent>
             <div className="h-96 w-full">
-              <ChartContainer
-                config={{
-                  Openness: { color: "#4299E1" },
-                  Conscientiousness: { color: "#48BB78" },
-                  Extraversion: { color: "#ED8936" },
-                  Agreeableness: { color: "#9F7AEA" },
-                  Neuroticism: { color: "#F56565" }
-                }}
-              >
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart 
-                    data={chartData} 
-                    layout="vertical" 
-                    margin={{ top: 20, right: 120, left: 80, bottom: 20 }}
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart 
+                  data={chartData} 
+                  layout="vertical" 
+                  margin={{ top: 20, right: 150, left: 100, bottom: 20 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
+                  <XAxis 
+                    type="number" 
+                    domain={[0, 100]} 
+                    tickCount={6} 
+                    label={{ value: 'Score (%)', position: 'bottom', dy: 10 }}
+                  />
+                  <YAxis 
+                    dataKey="trait" 
+                    type="category"
+                    width={100} 
+                    tick={{ fontSize: 14, fontWeight: 'bold' }}
+                    tickMargin={10}
+                  />
+                  <Bar 
+                    dataKey="score" 
+                    barSize={40}
+                    radius={[4, 4, 4, 4]}
+                    label={<CustomBarLabel />}
                   >
-                    <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
-                    <XAxis 
-                      type="number" 
-                      domain={[0, 100]} 
-                      tickCount={6} 
-                      label={{ value: 'Score (%)', position: 'bottom', dy: 10 }}
-                    />
-                    <YAxis 
-                      dataKey="trait" 
-                      type="category" 
-                      width={90}
-                      tickMargin={10}
-                    />
-                    <Bar dataKey="score" radius={[4, 4, 4, 4]}>
-                      <LabelList 
-                        dataKey="label" 
-                        position="right" 
-                        style={{ fill: "#333", fontWeight: "bold" }} 
-                      />
-                    </Bar>
-                    <ChartTooltip
-                      content={
-                        <ChartTooltipContent 
-                          formatter={(value, name, entry) => {
-                            const item = entry.payload;
-                            return [`${value}% (${item.rawScore}/${item.maxPossible})`, name];
-                          }}
-                        />
-                      }
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
-              </ChartContainer>
+                    {chartData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-8">
           {traitDescriptions.map((trait) => {
             const score = scores[trait.trait as keyof OceanScores];
             const rawScore = rawScores[trait.trait as keyof typeof rawScores];
@@ -238,23 +239,19 @@ const AssessmentResults = () => {
             return (
               <Card key={trait.trait} className="w-full">
                 <CardHeader
-                  className="pb-2"
+                  className="pb-2 flex flex-col space-y-1.5"
                   style={{ borderBottom: `4px solid ${trait.color}` }}
                 >
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-xl">{trait.trait}</CardTitle>
-                    <span className="text-2xl font-bold">
-                      {score}% ({rawScore}/{trait.maxScore})
-                    </span>
+                    <div className="text-2xl font-bold">
+                      {score}% <span className="text-lg">({rawScore}/{trait.maxScore})</span>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent className="pt-4">
-                  <p className="mb-2 text-left">
-                    <span className="font-medium">If high:</span> {trait.high}
-                  </p>
-                  <p className="text-left">
-                    <span className="font-medium">If low:</span> {trait.low}
-                  </p>
+                  <p className="mb-3 font-medium">If high: <span className="font-normal">{trait.high}</span></p>
+                  <p className="font-medium">If low: <span className="font-normal">{trait.low}</span></p>
                 </CardContent>
               </Card>
             );
