@@ -4,7 +4,7 @@ import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid, LabelList } from 'recharts';
 import { ArrowLeft } from 'lucide-react';
 
 interface OceanScores {
@@ -20,6 +20,7 @@ interface TraitDescription {
   high: string;
   low: string;
   color: string;
+  maxScore: number;
 }
 
 const traitDescriptions: TraitDescription[] = [
@@ -27,31 +28,36 @@ const traitDescriptions: TraitDescription[] = [
     trait: "Openness",
     high: "High openness indicates creativity, curiosity, and preference for variety and intellectual stimulation.",
     low: "Low openness suggests preference for routine, traditional values, and practicality.",
-    color: "#4299E1" // blue
+    color: "#4299E1", // blue
+    maxScore: 50
   },
   {
     trait: "Conscientiousness",
     high: "High conscientiousness indicates organization, reliability, self-discipline, and goal-oriented behavior.",
     low: "Low conscientiousness suggests spontaneity, flexibility, and a more relaxed attitude toward goals and standards.",
-    color: "#48BB78" // green
+    color: "#48BB78", // green
+    maxScore: 50
   },
   {
     trait: "Extraversion",
     high: "High extraversion indicates sociability, assertiveness, and a preference for social interaction.",
     low: "Low extraversion (introversion) suggests preference for solitude, quieter environments, and deeper one-on-one relationships.",
-    color: "#ED8936" // orange
+    color: "#ED8936", // orange
+    maxScore: 50
   },
   {
     trait: "Agreeableness",
     high: "High agreeableness indicates compassion, cooperation, and interest in maintaining harmony with others.",
     low: "Low agreeableness suggests a focus on self-interest, skepticism about others' motives, and competitiveness.",
-    color: "#9F7AEA" // purple
+    color: "#9F7AEA", // purple
+    maxScore: 50
   },
   {
     trait: "Neuroticism",
     high: "High neuroticism indicates tendency toward negative emotions, sensitivity to stress, and emotional reactivity.",
     low: "Low neuroticism (emotional stability) suggests calmness, resilience to stress, and emotional balance.",
-    color: "#F56565" // red
+    color: "#F56565", // red
+    maxScore: 50
   }
 ];
 
@@ -77,8 +83,8 @@ const AssessmentResults = () => {
     };
   };
 
-  // Helper function to calculate trait scores with scaled scoring
-  const calculateTraitScore = (answers: Record<string, number>, startId: number, endId: number): number => {
+  // Helper function to calculate raw trait scores
+  const calculateRawTraitScore = (answers: Record<string, number>, startId: number, endId: number): number => {
     let sum = 0;
     let count = 0;
     
@@ -90,18 +96,44 @@ const AssessmentResults = () => {
       }
     }
     
-    // Apply the scaled scoring formula: (Sum / 10) * 20 to get a score in the range of 0-100
-    return count > 0 ? Math.round((sum / count) * 20) : 0;
+    return count > 0 ? sum : 0;
+  };
+
+  // Helper function to calculate trait scores with scaled scoring
+  const calculateTraitScore = (answers: Record<string, number>, startId: number, endId: number): number => {
+    const rawScore = calculateRawTraitScore(answers, startId, endId);
+    const maxPossibleScore = (endId - startId + 1) * 5; // Each question can have max score of 5
+    
+    // Apply the scaled scoring formula: (Sum / MaxPossible) * 100 to get a percentage
+    return maxPossibleScore > 0 ? Math.round((rawScore / maxPossibleScore) * 100) : 0;
   };
 
   const scores = calculateScores();
 
+  // Get raw scores for each trait
+  const rawScores = {
+    Openness: calculateRawTraitScore(answers, 1, 10),
+    Conscientiousness: calculateRawTraitScore(answers, 11, 20),
+    Extraversion: calculateRawTraitScore(answers, 21, 30),
+    Agreeableness: calculateRawTraitScore(answers, 31, 40),
+    Neuroticism: calculateRawTraitScore(answers, 41, 50)
+  };
+
   // Format scores for the chart
-  const chartData = Object.entries(scores).map(([trait, score]) => ({
-    trait,
-    score,
-    fill: traitDescriptions.find(t => t.trait === trait)?.color || "#000000"
-  }));
+  const chartData = Object.entries(scores).map(([trait, score]) => {
+    const traitInfo = traitDescriptions.find(t => t.trait === trait);
+    const rawScore = rawScores[trait as keyof typeof rawScores];
+    const maxPossible = traitInfo?.maxScore || 50;
+    
+    return {
+      trait,
+      score,
+      rawScore,
+      maxPossible,
+      fill: traitInfo?.color || "#000000",
+      label: `${score}% (${rawScore}/${maxPossible})`
+    };
+  });
 
   const handleBackToAssessments = () => {
     navigate('/assessment');
@@ -144,7 +176,7 @@ const AssessmentResults = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-80 w-full">
+          <div className="h-96 w-full">
             <ChartContainer
               config={{
                 Openness: { color: "#4299E1" },
@@ -155,12 +187,40 @@ const AssessmentResults = () => {
               }}
             >
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} layout="vertical" margin={{ top: 10, right: 10, left: 40, bottom: 10 }}>
-                  <XAxis type="number" domain={[0, 100]} />
-                  <YAxis dataKey="trait" type="category" />
-                  <Bar dataKey="score" radius={[4, 4, 4, 4]} />
+                <BarChart 
+                  data={chartData} 
+                  layout="vertical" 
+                  margin={{ top: 20, right: 60, left: 80, bottom: 20 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
+                  <XAxis 
+                    type="number" 
+                    domain={[0, 100]} 
+                    tickCount={6} 
+                    label={{ value: 'Score (%)', position: 'bottom', dy: 10 }}
+                  />
+                  <YAxis 
+                    dataKey="trait" 
+                    type="category" 
+                    width={90}
+                    tickMargin={10}
+                  />
+                  <Bar dataKey="score" radius={[4, 4, 4, 4]}>
+                    <LabelList 
+                      dataKey="label" 
+                      position="right" 
+                      style={{ fill: "#333", fontWeight: "bold" }} 
+                    />
+                  </Bar>
                   <ChartTooltip
-                    content={<ChartTooltipContent />}
+                    content={
+                      <ChartTooltipContent 
+                        formatter={(value, name, entry) => {
+                          const item = entry.payload;
+                          return [`${value}% (${item.rawScore}/${item.maxPossible})`, name];
+                        }}
+                      />
+                    }
                   />
                 </BarChart>
               </ResponsiveContainer>
@@ -170,29 +230,34 @@ const AssessmentResults = () => {
       </Card>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {traitDescriptions.map((trait) => (
-          <Card key={trait.trait}>
-            <CardHeader
-              className="pb-2"
-              style={{ borderBottom: `4px solid ${trait.color}` }}
-            >
-              <CardTitle className="text-xl flex items-center justify-between">
-                {trait.trait}
-                <span className="text-2xl font-bold">
-                  {scores[trait.trait as keyof OceanScores]}%
-                </span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <p className="mb-2">
-                <span className="font-medium">If high:</span> {trait.high}
-              </p>
-              <p>
-                <span className="font-medium">If low:</span> {trait.low}
-              </p>
-            </CardContent>
-          </Card>
-        ))}
+        {traitDescriptions.map((trait) => {
+          const score = scores[trait.trait as keyof OceanScores];
+          const rawScore = rawScores[trait.trait as keyof typeof rawScores];
+          
+          return (
+            <Card key={trait.trait}>
+              <CardHeader
+                className="pb-2"
+                style={{ borderBottom: `4px solid ${trait.color}` }}
+              >
+                <CardTitle className="text-xl flex items-center justify-between">
+                  {trait.trait}
+                  <span className="text-2xl font-bold">
+                    {score}% ({rawScore}/{trait.maxScore})
+                  </span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <p className="mb-2">
+                  <span className="font-medium">If high:</span> {trait.high}
+                </p>
+                <p>
+                  <span className="font-medium">If low:</span> {trait.low}
+                </p>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );
