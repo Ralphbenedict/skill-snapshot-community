@@ -143,7 +143,617 @@ const assessmentQuestions: Record<string, Question[]> = {
       correctAnswerId: 'c',
       explanation: 'Understanding the underlying needs and business objectives allows you to find potential compromises or alternative solutions that address the core requirements.'
     }
+  ],
+  'ocean-trait': [
+    {
+      id: 'o1',
+      number: 1,
+      text: 'I enjoy trying new and unfamiliar activities.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'o2',
+      number: 2,
+      text: 'I have a vivid imagination.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'o3',
+      number: 3,
+      text: 'I am interested in abstract ideas.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'o4',
+      number: 4,
+      text: 'I prefer variety over routine.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'o5',
+      number: 5,
+      text: 'I am creative in my approach to problem-solving.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'o6',
+      number: 6,
+      text: 'I enjoy artistic and cultural experiences.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'o7',
+      number: 7,
+      text: 'I find new experiences exciting.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'o8',
+      number: 8,
+      text: 'I am curious about different perspectives.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'o9',
+      number: 9,
+      text: 'I embrace change easily.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'o10',
+      number: 10,
+      text: 'I think deeply about philosophical questions.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'c1',
+      number: 11,
+      text: 'I am highly organized in my daily life.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'c2',
+      number: 12,
+      text: 'I pay close attention to details.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'c3',
+      number: 13,
+      text: 'I set clear goals and follow through.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'c4',
+      number: 14,
+      text: 'I am disciplined in my work habits.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'c5',
+      number: 15,
+      text: 'I plan my tasks well in advance.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'c6',
+      number: 16,
+      text: 'I prefer structured routines over spontaneity.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'c7',
+      number: 17,
+      text: 'I complete tasks thoroughly and carefully.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'c8',
+      number: 18,
+      text: 'I find it easy to stick to a schedule.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'c9',
+      number: 19,
+      text: 'I rarely make impulsive decisions.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'c10',
+      number: 20,
+      text: 'I take responsibility for my actions.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'e1',
+      number: 21,
+      text: 'I enjoy being the center of attention.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'e2',
+      number: 22,
+      text: 'I am energized by social interactions.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'e3',
+      number: 23,
+      text: 'I like to engage in group activities.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'e4',
+      number: 24,
+      text: 'I feel comfortable in large gatherings.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'e5',
+      number: 25,
+      text: 'I speak up in discussions and meetings.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'e6',
+      number: 26,
+      text: 'I find it easy to make new friends.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'e7',
+      number: 27,
+      text: 'I prefer to be around others rather than alone.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'e8',
+      number: 28,
+      text: 'I am outgoing and talkative.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'e9',
+      number: 29,
+      text: 'I often take the lead in social settings.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'e10',
+      number: 30,
+      text: 'I enjoy lively and energetic environments.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'a1',
+      number: 31,
+      text: 'I sympathize with others\' feelings.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'a2',
+      number: 32,
+      text: 'I enjoy helping others.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'a3',
+      number: 33,
+      text: 'I avoid conflict whenever possible.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'a4',
+      number: 34,
+      text: 'I trust people easily.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'a5',
+      number: 35,
+      text: 'I am considerate and kind to others.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'a6',
+      number: 36,
+      text: 'I feel compassion for people in distress.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'a7',
+      number: 37,
+      text: 'I prioritize relationships over personal gain.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'a8',
+      number: 38,
+      text: 'I often think about others\' well-being.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'a9',
+      number: 39,
+      text: 'I rarely hold grudges.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'a10',
+      number: 40,
+      text: 'I work well with others.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'n1',
+      number: 41,
+      text: 'I often feel anxious or worried.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'n2',
+      number: 42,
+      text: 'I get stressed easily.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'n3',
+      number: 43,
+      text: 'I experience mood swings frequently.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'n4',
+      number: 44,
+      text: 'I dwell on negative emotions.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'n5',
+      number: 45,
+      text: 'I often feel self-conscious.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'n6',
+      number: 46,
+      text: 'I struggle with uncertainty.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'n7',
+      number: 47,
+      text: 'I find it difficult to relax.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'n8',
+      number: 48,
+      text: 'I get frustrated easily.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'n9',
+      number: 49,
+      text: 'I am highly sensitive to criticism.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    },
+    {
+      id: 'n10',
+      number: 50,
+      text: 'I sometimes feel overwhelmed by emotions.',
+      answers: [
+        { id: '1', text: 'Strongly Disagree' },
+        { id: '2', text: 'Disagree' },
+        { id: '3', text: 'Neutral' },
+        { id: '4', text: 'Agree' },
+        { id: '5', text: 'Strongly Agree' }
+      ]
+    }
   ]
+};
+
+const oceanTraitMetadata = {
+  'o': { name: 'Openness', description: 'Openness to Experience' },
+  'c': { name: 'Conscientiousness', description: 'Conscientiousness' },
+  'e': { name: 'Extraversion', description: 'Extraversion' },
+  'a': { name: 'Agreeableness', description: 'Agreeableness' },
+  'n': { name: 'Neuroticism', description: 'Neuroticism/Emotional Stability' }
 };
 
 const TakeAssessment = () => {
@@ -152,6 +762,7 @@ const TakeAssessment = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
   const [isComplete, setIsComplete] = useState(false);
+  const [oceanScores, setOceanScores] = useState<Record<string, number>>({});
 
   // Get questions for the current assessment
   const questions = assessmentId ? assessmentQuestions[assessmentId] || [] : [];
@@ -167,6 +778,10 @@ const TakeAssessment = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
+      // Calculate OCEAN scores for ocean-trait assessment
+      if (assessmentId === 'ocean-trait') {
+        calculateOceanScores();
+      }
       // Submit assessment
       setIsComplete(true);
     }
@@ -180,6 +795,42 @@ const TakeAssessment = () => {
 
   const handleGoBack = () => {
     navigate('/assessment');
+  };
+
+  // Calculate the OCEAN trait scores
+  const calculateOceanScores = () => {
+    // Initialize scores for each trait
+    const scores = {
+      'o': 0, // Openness
+      'c': 0, // Conscientiousness
+      'e': 0, // Extraversion
+      'a': 0, // Agreeableness
+      'n': 0  // Neuroticism
+    };
+    
+    // Calculate raw scores
+    Object.entries(userAnswers).forEach(([questionId, answerId]) => {
+      const traitPrefix = questionId.charAt(0);
+      if (traitPrefix in scores) {
+        scores[traitPrefix] += parseInt(answerId);
+      }
+    });
+    
+    // Scale scores to a 0-100 range (10 questions per trait, max 5 points per question)
+    // Formula: (raw score / (number of questions × max points per question)) × 100
+    const scaledScores = {
+      'o': Math.round((scores['o'] / (10 * 5)) * 100),
+      'c': Math.round((scores['c'] / (10 * 5)) * 100),
+      'e': Math.round((scores['e'] / (10 * 5)) * 100),
+      'a': Math.round((scores['a'] / (10 * 5)) * 100),
+      'n': Math.round((scores['n'] / (10 * 5)) * 100)
+    };
+    
+    setOceanScores(scaledScores);
+    
+    // In a real app, you would send this data to MongoDB here
+    console.log('OCEAN Scores:', scaledScores);
+    console.log('Raw answers:', userAnswers);
   };
 
   if (!assessmentId || questions.length === 0) {
@@ -197,6 +848,56 @@ const TakeAssessment = () => {
   const currentQuestion = questions[currentQuestionIndex];
   const selectedAnswer = userAnswers[currentQuestion.id] || null;
 
+  // Render results for the OCEAN trait assessment
+  if (isComplete && assessmentId === 'ocean-trait') {
+    return (
+      <div className="min-h-screen bg-background flex flex-col">
+        <div className="p-4 border-b bg-card">
+          <div className="container mx-auto flex justify-between items-center">
+            <button 
+              onClick={handleGoBack}
+              className="flex items-center text-sm font-medium text-muted-foreground hover:text-foreground"
+            >
+              <ArrowLeft className="h-4 w-4 mr-1" />
+              Return to Assessments
+            </button>
+            <span className="font-medium">OCEAN Trait Assessment Results</span>
+          </div>
+        </div>
+        
+        <div className="flex-1 container mx-auto flex flex-col items-center px-4 py-8 space-y-8">
+          <div className="w-full max-w-3xl">
+            <h1 className="text-2xl font-bold mb-6">Your Personality Profile</h1>
+            <div className="grid gap-6">
+              {Object.entries(oceanTraitMetadata).map(([trait, metadata]) => (
+                <div key={trait} className="border rounded-lg p-6 bg-card">
+                  <div className="flex justify-between items-center mb-2">
+                    <h2 className="text-xl font-semibold">{metadata.name}</h2>
+                    <span className="text-lg font-medium">{oceanScores[trait]}%</span>
+                  </div>
+                  <div className="w-full bg-secondary h-3 rounded-full mb-4">
+                    <div 
+                      className="bg-primary h-3 rounded-full" 
+                      style={{ width: `${oceanScores[trait]}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-muted-foreground">{metadata.description}</p>
+                </div>
+              ))}
+            </div>
+            
+            <div className="mt-8 flex justify-center">
+              <Button onClick={handleGoBack} className="w-full max-w-md">
+                Return to Assessments
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Regular assessment taking UI
   if (isComplete) {
     // Simple completion screen - in a real app, this would calculate and store results
     return (
@@ -226,6 +927,7 @@ const TakeAssessment = () => {
              assessmentId === 'design' ? 'Design Language & Principles' : 
              assessmentId === 'technical' ? 'Technical Skills' :
              assessmentId === 'leadership' ? 'Leadership & Soft Skills' : 
+             assessmentId === 'ocean-trait' ? 'OCEAN Personality Trait Assessment' :
              'Competency Evaluation'}
           </span>
         </div>

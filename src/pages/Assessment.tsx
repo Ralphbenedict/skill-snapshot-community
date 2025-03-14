@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CustomBadge from "@/components/ui/custom-badge";
-import { FileText, ListChecks, BarChart4, Clock, Award, Target, Palette, ExternalLink } from 'lucide-react';
+import { FileText, ListChecks, BarChart4, Clock, Award, Target, Palette, ExternalLink, Brain } from 'lucide-react';
 import Header from '@/components/Header';
 import { useNavigate } from 'react-router-dom';
 
@@ -42,6 +41,13 @@ const assessmentTypes = [
     title: 'Design Language & Principles',
     description: 'Evaluate your design thinking and system knowledge',
     icon: <Palette className="h-5 w-5 text-primary" />,
+    status: 'New'
+  },
+  {
+    id: 'ocean-trait',
+    title: 'OCEAN Personality Traits',
+    description: 'Discover your Big Five personality dimensions',
+    icon: <Brain className="h-5 w-5 text-primary" />,
     status: 'New'
   }
 ];
@@ -157,6 +163,30 @@ const featuredAssessments = {
       { name: "Scoring", description: "Evaluation of design thinking, technical knowledge, and practical application skills." },
       { name: "Time Commitment", description: "Approximately 60-75 minutes to complete the full assessment." }
     ]
+  },
+  'ocean-trait': {
+    title: "OCEAN Personality Trait Assessment",
+    description: "Discover your Big Five personality dimensions",
+    overview: "This assessment evaluates your personality across the five major dimensions known as the Big Five or OCEAN: Openness, Conscientiousness, Extraversion, Agreeableness, and Neuroticism/Emotional Stability.",
+    skills: [
+      { name: "Openness", value: 76, level: "High" },
+      { name: "Conscientiousness", value: 82, level: "High" },
+      { name: "Extraversion", value: 65, level: "Moderate" },
+      { name: "Agreeableness", value: 88, level: "High" },
+      { name: "Neuroticism", value: 42, level: "Low" }
+    ],
+    skillsList: [
+      { name: "Openness to Experience", description: "Curiosity, creativity, and preference for variety and intellectual stimulation", icon: <Brain className="h-4 w-4 text-primary" /> },
+      { name: "Conscientiousness", description: "Organization, reliability, self-discipline, and preference for planned behavior", icon: <ListChecks className="h-4 w-4 text-primary" /> },
+      { name: "Extraversion", description: "Sociability, assertiveness, and energy in social situations", icon: <Target className="h-4 w-4 text-primary" /> },
+      { name: "Agreeableness", description: "Compassion, cooperation, and interest in social harmony", icon: <Award className="h-4 w-4 text-primary" /> },
+      { name: "Neuroticism", description: "Tendency toward negative emotions and sensitivity to stress (lower scores indicate better emotional stability)", icon: <BarChart4 className="h-4 w-4 text-primary" /> }
+    ],
+    details: [
+      { name: "Assessment Format", description: "50-question personality inventory with Likert scale responses (Strongly Disagree to Strongly Agree)." },
+      { name: "Scoring", description: "Responses are analyzed across the five traits to create a comprehensive personality profile." },
+      { name: "Time Commitment", description: "Approximately 10-15 minutes to complete the full assessment." }
+    ]
   }
 };
 
@@ -168,11 +198,9 @@ const Assessment = () => {
     setSelectedAssessment(id);
   };
 
-  // Get the current featured assessment based on selection
   const currentAssessment = featuredAssessments[selectedAssessment as keyof typeof featuredAssessments];
 
   const handleStartAssessment = () => {
-    // Open the assessment in a new tab
     window.open(`/assessment/take/${selectedAssessment}`, '_blank');
   };
 
@@ -181,15 +209,12 @@ const Assessment = () => {
       <Header />
       <div className="container mx-auto px-4 pt-24 pb-12">
         <div className="grid gap-8">
-          {/* Page Header */}
           <div className="text-left mb-6">
             <h1 className="text-3xl font-bold tracking-tight">Skill Assessment</h1>
             <p className="text-muted-foreground mt-2">Measure, track, and improve your professional skills over time</p>
           </div>
 
-          {/* Main Content Area */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Left Column - Assessment Options */}
             <div className="space-y-6 lg:col-span-1">
               <Card>
                 <CardHeader>
@@ -239,7 +264,6 @@ const Assessment = () => {
               </Card>
             </div>
 
-            {/* Center and Right Columns - Main Content */}
             <div className="lg:col-span-2 space-y-6">
               <Card>
                 <CardHeader>
@@ -373,7 +397,6 @@ const Assessment = () => {
   );
 };
 
-// Assessment Type Card Component
 const AssessmentTypeCard = ({ 
   title, 
   description, 
