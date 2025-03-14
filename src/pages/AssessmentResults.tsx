@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid, Cell, Text } from 'recharts';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Info } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface OceanScores {
   Openness: number;
@@ -443,7 +443,27 @@ const AssessmentResults = () => {
                 >
                   <div className="flex flex-col">
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-xl">{trait.trait}</CardTitle>
+                      <div className="flex items-center gap-2">
+                        <CardTitle className="text-xl">{trait.trait}</CardTitle>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-6 w-6 rounded-full">
+                              <Info className="h-4 w-4" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-80 p-4">
+                            <div className="space-y-2">
+                              <h4 className="font-medium">About {trait.trait} Scoring</h4>
+                              <p className="text-sm text-muted-foreground">
+                                {trait.trait} is typically scored on a {trait.minScaledScore}-{trait.maxScaledScore} scale in professional assessments.
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                Your raw score ({rawScore}/{trait.maxScore}) has been scaled to match this professional scoring system.
+                              </p>
+                            </div>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
                       <div className="text-2xl font-bold">
                         {scaledScore}
                       </div>
@@ -455,7 +475,7 @@ const AssessmentResults = () => {
                       </div>
                     </div>
                     <div className="text-sm mt-1">
-                      Raw score: {rawScore}/{trait.maxScore} ≈ {scaledScore} on standard scale
+                      Raw score: {rawScore}/{trait.maxScore} ≈ {scaledScore} on {trait.minScaledScore}-{trait.maxScaledScore} scale
                     </div>
                   </div>
                 </CardHeader>
@@ -479,7 +499,29 @@ const AssessmentResults = () => {
         {/* Trait Combinations Section */}
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle>Trait Combinations</CardTitle>
+            <div className="flex items-center gap-2">
+              <CardTitle>Trait Combinations</CardTitle>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full">
+                    <Info className="h-4 w-4" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80 p-4">
+                  <div className="space-y-2">
+                    <h4 className="font-medium">About Trait Combinations</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Professional assessments also analyze how traits interact with each other:
+                    </p>
+                    <ul className="text-sm text-muted-foreground list-disc pl-5 space-y-1">
+                      <li>Openness & Extraversion: Scored on a 150-200 scale</li>
+                      <li>Conscientiousness & Neuroticism: Scored on a 100-150 scale</li>
+                      <li>Agreeableness & Conscientiousness: Scored on a 150-200 scale</li>
+                    </ul>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
             <CardDescription>
               How your personality traits interact with each other can reveal deeper insights into your behavior patterns.
             </CardDescription>
@@ -503,9 +545,29 @@ const AssessmentResults = () => {
               
               {/* Global Analysis */}
               <div className="p-4 border rounded-lg bg-slate-50 dark:bg-slate-800 md:col-span-2">
-                <h3 className="text-lg font-semibold mb-2">
-                  Global Analysis
-                </h3>
+                <div className="flex items-center gap-2 mb-2">
+                  <h3 className="text-lg font-semibold">
+                    Global Analysis
+                  </h3>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-6 w-6 rounded-full">
+                        <Info className="h-4 w-4" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-80 p-4">
+                      <div className="space-y-2">
+                        <h4 className="font-medium">About Global Analysis</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Global Analysis represents your overall personality profile, scored on a 400-500 scale in professional assessments.
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          This score is calculated by combining all your scaled trait scores.
+                        </p>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                </div>
                 <div className="flex justify-between items-center mb-3">
                   <span className="text-sm text-muted-foreground">Overall Score</span>
                   <span className={`text-lg font-medium ${globalScoreInRange ? 'text-green-600' : 'text-gray-600'}`}>
@@ -520,34 +582,17 @@ const AssessmentResults = () => {
 
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle>Understanding Your Results</CardTitle>
+            <CardTitle>Key Insights About Your Assessment</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="mb-4">
-              The OCEAN personality assessment measures five key personality traits. Your scores are mapped to specialized ranges that provide deeper insights:
-            </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li><strong>Openness:</strong> Typically scored on a 76-100 scale for high scores</li>
-              <li><strong>Conscientiousness:</strong> Typically scored on a 51-75 scale for high scores</li>
-              <li><strong>Extraversion:</strong> Typically scored on a 76-100 scale for high scores</li>
-              <li><strong>Agreeableness:</strong> Typically scored on a 76-100 scale for high scores</li>
-              <li><strong>Neuroticism:</strong> Typically scored on a 51-75 scale for high scores</li>
-            </ul>
-            <p className="mt-4">
-              We've also analyzed combinations of traits, which can reveal more complex aspects of your personality:
-            </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li><strong>Openness & Extraversion:</strong> Scored on a 150-200 scale</li>
-              <li><strong>Conscientiousness & Neuroticism:</strong> Scored on a 100-150 scale</li>
-              <li><strong>Agreeableness & Conscientiousness:</strong> Scored on a 150-200 scale</li>
-              <li><strong>Global Analysis:</strong> Scored on a 400-500 scale, representing your overall personality profile</li>
-            </ul>
-            <p className="mt-4">
-              Your raw scores (what you answered on our assessment) have been mathematically scaled to match the specialized scoring system used by professional personality assessments that typically use 300+ data points.
-            </p>
-            <p className="mt-4">
-              Remember that there are no "good" or "bad" scores. Each trait combination creates a unique personality profile with its own strengths and challenges.
-            </p>
+            <div className="p-4 rounded-lg bg-slate-50 dark:bg-slate-800">
+              <p className="mb-4">
+                Your raw scores (what you answered on our assessment) have been mathematically scaled to match the specialized scoring system used by professional personality assessments that typically use 300+ data points.
+              </p>
+              <p>
+                Remember that there are no "good" or "bad" scores. Each trait combination creates a unique personality profile with its own strengths and challenges.
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>
