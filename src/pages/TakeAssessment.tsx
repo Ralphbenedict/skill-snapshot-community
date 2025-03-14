@@ -230,10 +230,13 @@ const TakeAssessment = () => {
       return;
     }
     
-    // Calculate results based on assessment type
-    calculateResults();
+    // Show toast to indicate completion
+    toast({
+      title: "Assessment Completed",
+      description: "Redirecting to your results...",
+    });
     
-    // Navigate to results page
+    // Navigate to results page with the answers
     navigate(`/assessment/results/${assessmentId}`, { state: { answers } });
   };
   
