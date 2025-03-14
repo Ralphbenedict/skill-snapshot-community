@@ -21,7 +21,7 @@ interface TraitDescription {
   color: string;
   maxScore: number;
   scaledMax: number; // Max score on the scaled range (76-100, 51-75, etc.)
-  minScaledScore: number; // Min score on the scaled range
+  minScaledScore: number; // Min score on the scaled range (76-100, 51-75, etc.)
   maxScaledScore: number; // Max score on the scaled range
 }
 
@@ -105,6 +105,31 @@ const globalAnalysis = {
   minScaledScore: 400,
   maxScaledScore: 500,
   description: "Your overall personality profile shows pronounced traits across multiple dimensions, creating a unique and influential personality that shapes how you navigate life, make decisions, and interact with others."
+};
+
+// Calculate the equivalent score on the specific trait's scale
+const calculateScaledScore = (percentageScore: number, traitInfo: TraitDescription): number => {
+  // Map the 0-100 percentage scale to the trait's specific scale (e.g., 76-100, 51-75)
+  const range = traitInfo.maxScaledScore - traitInfo.minScaledScore;
+  const minScore = traitInfo.minScaledScore;
+  
+  // For high scores, map to the trait's scale
+  if (percentageScore >= 75) {
+    return Math.round(minScore + (range * (percentageScore - 75) / 25));
+  }
+  // For medium scores (50-75), map to 26-50 or 51-minScaledScore depending on the trait
+  else if (percentageScore >= 50) {
+    if (minScore === 76) { // For 76-100 traits
+      return Math.round(51 + ((75 - 51) * (percentageScore - 50) / 25));
+    } else { // For 51-75 traits
+      const mediumRange = minScore - 26;
+      return Math.round(26 + (mediumRange * (percentageScore - 50) / 25));
+    }
+  }
+  // For low scores, map to 0-25
+  else {
+    return Math.round(percentageScore);
+  }
 };
 
 // Custom label component for the bar chart
