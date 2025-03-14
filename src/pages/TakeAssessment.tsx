@@ -313,7 +313,11 @@ const TakeAssessment = () => {
         </p>
       </div>
       
-      <AssessmentProgress progress={progress} />
+      <AssessmentProgress 
+        currentQuestion={Object.keys(answers).length} 
+        totalQuestions={questions.length} 
+        progress={progress} 
+      />
       
       <div className="my-8">
         <MultiQuestionDisplay 

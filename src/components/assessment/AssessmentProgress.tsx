@@ -7,14 +7,19 @@ interface AssessmentProgressProps {
   currentQuestion: number;
   totalQuestions: number;
   timeRemaining?: string;
+  progress?: number; // Add this new optional property
 }
 
 const AssessmentProgress: React.FC<AssessmentProgressProps> = ({
   currentQuestion,
   totalQuestions,
-  timeRemaining
+  timeRemaining,
+  progress: providedProgress
 }) => {
-  const progressPercentage = (currentQuestion / totalQuestions) * 100;
+  // Use provided progress if available, otherwise calculate it
+  const progressPercentage = providedProgress !== undefined 
+    ? providedProgress 
+    : (currentQuestion / totalQuestions) * 100;
   
   return (
     <div className="w-full max-w-3xl">
