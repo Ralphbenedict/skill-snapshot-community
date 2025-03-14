@@ -20,7 +20,9 @@ interface TraitDescription {
   low: string;
   color: string;
   maxScore: number;
-  scaledMax: number; // Max score for scaled representation (300+ data points reference)
+  scaledMax: number; // Max score on the scaled range (76-100, 51-75, etc.)
+  minScaledScore: number; // Min score on the scaled range
+  maxScaledScore: number; // Max score on the scaled range
 }
 
 const traitDescriptions: TraitDescription[] = [
@@ -30,7 +32,9 @@ const traitDescriptions: TraitDescription[] = [
     low: "Low openness suggests preference for routine, traditional values, and practicality.",
     color: "#4299E1", // blue
     maxScore: 50,
-    scaledMax: 100
+    scaledMax: 100,
+    minScaledScore: 76,
+    maxScaledScore: 100
   },
   {
     trait: "Conscientiousness",
@@ -38,7 +42,9 @@ const traitDescriptions: TraitDescription[] = [
     low: "Low conscientiousness suggests spontaneity, flexibility, and a more relaxed attitude toward goals and standards.",
     color: "#48BB78", // green
     maxScore: 50,
-    scaledMax: 100
+    scaledMax: 75,
+    minScaledScore: 51,
+    maxScaledScore: 75
   },
   {
     trait: "Extraversion",
@@ -46,7 +52,9 @@ const traitDescriptions: TraitDescription[] = [
     low: "Low extraversion (introversion) suggests preference for solitude, quieter environments, and deeper one-on-one relationships.",
     color: "#ED8936", // orange
     maxScore: 50,
-    scaledMax: 100
+    scaledMax: 100,
+    minScaledScore: 76,
+    maxScaledScore: 100
   },
   {
     trait: "Agreeableness",
@@ -54,7 +62,9 @@ const traitDescriptions: TraitDescription[] = [
     low: "Low agreeableness suggests a focus on self-interest, skepticism about others' motives, and competitiveness.",
     color: "#9F7AEA", // purple
     maxScore: 50,
-    scaledMax: 100
+    scaledMax: 100,
+    minScaledScore: 76,
+    maxScaledScore: 100
   },
   {
     trait: "Neuroticism",
@@ -62,9 +72,40 @@ const traitDescriptions: TraitDescription[] = [
     low: "Low neuroticism (emotional stability) suggests calmness, resilience to stress, and emotional balance.",
     color: "#F56565", // red
     maxScore: 50,
-    scaledMax: 100
+    scaledMax: 75,
+    minScaledScore: 51,
+    maxScaledScore: 75
   }
 ];
+
+// Trait combinations with their score ranges
+const traitCombinations = [
+  {
+    traits: ["Openness", "Extraversion"],
+    minScaledScore: 150,
+    maxScaledScore: 200,
+    description: "Combining high Openness and Extraversion indicates a dynamic personality that thrives on both social interaction and intellectual exploration. You likely enjoy sharing new ideas and experiences with others."
+  },
+  {
+    traits: ["Conscientiousness", "Neuroticism"],
+    minScaledScore: 100,
+    maxScaledScore: 150,
+    description: "This combination of Conscientiousness and Neuroticism suggests you are detail-oriented and may experience emotional intensity when striving for perfection or when plans don't go as expected."
+  },
+  {
+    traits: ["Agreeableness", "Conscientiousness"],
+    minScaledScore: 150,
+    maxScaledScore: 200,
+    description: "High scores in both Agreeableness and Conscientiousness indicate you likely excel in team environments, combining reliability with a cooperative nature that makes you valuable in collaborative settings."
+  }
+];
+
+// Global analysis score range
+const globalAnalysis = {
+  minScaledScore: 400,
+  maxScaledScore: 500,
+  description: "Your overall personality profile shows pronounced traits across multiple dimensions, creating a unique and influential personality that shapes how you navigate life, make decisions, and interact with others."
+};
 
 // Custom label component for the bar chart
 const CustomBarLabel = (props: any) => {
@@ -85,18 +126,27 @@ const CustomBarLabel = (props: any) => {
 };
 
 // Function to determine which description to show based on score
-const getScoreCategory = (score: number): string => {
-  if (score >= 75) return 'high';
-  if (score <= 25) return 'low';
+const getScoreCategory = (score: number, traitInfo: TraitDescription): string => {
+  // Scale the percentage score to the trait's specific range
+  const scaledScore = calculateScaledScore(score, traitInfo);
+  
+  // Use the scaled scores for categorization
+  if (scaledScore >= traitInfo.minScaledScore) return 'high';
+  // If the trait has a range of 51-75, then anything below 51 is considered low
+  if (traitInfo.minScaledScore === 51 && scaledScore < 51) return 'low';
+  // If the trait has a range of 76-100, then anything below 76 is considered low/moderate
+  if (traitInfo.minScaledScore === 76 && scaledScore < 76) return 'low';
+  
   return 'moderate';
 };
 
 // Function to get appropriate description based on score
 const getTraitDescription = (trait: string, score: number): string => {
   const traitInfo = traitDescriptions.find(t => t.trait === trait);
-  const category = getScoreCategory(score);
   
   if (!traitInfo) return '';
+  
+  const category = getScoreCategory(score, traitInfo);
   
   if (category === 'high') {
     return traitInfo.high;
@@ -107,12 +157,24 @@ const getTraitDescription = (trait: string, score: number): string => {
   }
 };
 
-// Function to get score range band text
-const getScoreRangeBand = (score: number): string => {
-  if (score >= 76) return 'Score 76-100';
-  if (score >= 51) return 'Score 51-75';
-  if (score >= 26) return 'Score 26-50';
-  return 'Score 0-25';
+// Function to get score range band text based on the trait's specific scale
+const getScoreRangeBand = (score: number, traitInfo: TraitDescription): string => {
+  const scaledScore = calculateScaledScore(score, traitInfo);
+  
+  if (traitInfo.minScaledScore === 76) {
+    // For traits with 76-100 range
+    if (scaledScore >= 76) return `Score ${traitInfo.minScaledScore}-${traitInfo.maxScaledScore}`;
+    if (scaledScore >= 51) return 'Score 51-75';
+    if (scaledScore >= 26) return 'Score 26-50';
+    return 'Score 0-25';
+  } else if (traitInfo.minScaledScore === 51) {
+    // For traits with 51-75 range
+    if (scaledScore >= 51) return `Score ${traitInfo.minScaledScore}-${traitInfo.maxScaledScore}`;
+    if (scaledScore >= 26) return 'Score 26-50';
+    return 'Score 0-25';
+  }
+  
+  return `Score ${scaledScore}`;
 };
 
 const AssessmentResults = () => {
@@ -162,10 +224,58 @@ const AssessmentResults = () => {
     return maxPossibleScore > 0 ? Math.round((rawScore / maxPossibleScore) * 100) : 0;
   };
 
-  // Calculate the equivalent score on a larger scale (like the 300+ data points reference)
-  const calculateScaledScore = (rawScore: number, traitInfo: TraitDescription): number => {
-    const scaleFactor = traitInfo.scaledMax / traitInfo.maxScore;
-    return Math.round(rawScore * scaleFactor);
+  // Calculate the equivalent score on the specific trait's scale
+  const calculateScaledScore = (percentageScore: number, traitInfo: TraitDescription): number => {
+    // Map the 0-100 percentage scale to the trait's specific scale (e.g., 76-100, 51-75)
+    const range = traitInfo.maxScaledScore - traitInfo.minScaledScore;
+    const minScore = traitInfo.minScaledScore;
+    
+    // For high scores, map to the trait's scale
+    if (percentageScore >= 75) {
+      return Math.round(minScore + (range * (percentageScore - 75) / 25));
+    }
+    // For medium scores (50-75), map to 26-50 or 51-minScaledScore depending on the trait
+    else if (percentageScore >= 50) {
+      if (minScore === 76) { // For 76-100 traits
+        return Math.round(51 + ((75 - 51) * (percentageScore - 50) / 25));
+      } else { // For 51-75 traits
+        const mediumRange = minScore - 26;
+        return Math.round(26 + (mediumRange * (percentageScore - 50) / 25));
+      }
+    }
+    // For low scores, map to 0-25
+    else {
+      return Math.round(percentageScore);
+    }
+  };
+
+  // Calculate combination scores
+  const calculateCombinationScore = (traits: string[]): number => {
+    let sum = 0;
+    
+    for (const trait of traits) {
+      const traitInfo = traitDescriptions.find(t => t.trait === trait);
+      if (traitInfo) {
+        const percentageScore = scores[trait as keyof OceanScores];
+        const scaledScore = calculateScaledScore(percentageScore, traitInfo);
+        sum += scaledScore;
+      }
+    }
+    
+    return sum;
+  };
+
+  // Calculate global analysis score (sum of all scaled trait scores)
+  const calculateGlobalScore = (): number => {
+    let sum = 0;
+    
+    for (const traitInfo of traitDescriptions) {
+      const percentageScore = scores[traitInfo.trait as keyof OceanScores];
+      const scaledScore = calculateScaledScore(percentageScore, traitInfo);
+      sum += scaledScore;
+    }
+    
+    return sum;
   };
 
   const scores = calculateScores();
@@ -180,21 +290,37 @@ const AssessmentResults = () => {
   };
 
   // Format scores for the chart
-  const chartData = Object.entries(scores).map(([trait, score]) => {
+  const chartData = Object.entries(scores).map(([trait, percentageScore]) => {
     const traitInfo = traitDescriptions.find(t => t.trait === trait);
+    if (!traitInfo) return { trait, score: percentageScore, rawScore: 0, maxPossible: 50, fill: "#000000", scoreText: "" };
+    
     const rawScore = rawScores[trait as keyof typeof rawScores];
-    const maxPossible = traitInfo?.maxScore || 50;
-    const scaledScore = traitInfo ? calculateScaledScore(rawScore, traitInfo) : 0;
+    const maxPossible = traitInfo.maxScore;
+    const scaledScore = calculateScaledScore(percentageScore, traitInfo);
     
     return {
       trait,
-      score,
+      score: percentageScore,
       rawScore,
       maxPossible,
-      fill: traitInfo?.color || "#000000",
-      scoreText: `${score}% (${rawScore}/${maxPossible} ≈ ${scaledScore}/${traitInfo?.scaledMax})`
+      fill: traitInfo.color,
+      scoreText: `${percentageScore}% (${rawScore}/${maxPossible} ≈ ${scaledScore}/${traitInfo.minScaledScore}-${traitInfo.maxScaledScore})`
     };
   });
+
+  // Calculate combination scores
+  const combinationScores = traitCombinations.map(combo => {
+    const combinedScore = calculateCombinationScore(combo.traits);
+    return {
+      ...combo,
+      score: combinedScore,
+      inRange: combinedScore >= combo.minScaledScore && combinedScore <= combo.maxScaledScore
+    };
+  });
+
+  // Calculate global score
+  const globalScore = calculateGlobalScore();
+  const globalScoreInRange = globalScore >= globalAnalysis.minScaledScore && globalScore <= globalAnalysis.maxScaledScore;
 
   const handleBackToAssessments = () => {
     navigate('/assessment');
@@ -243,7 +369,7 @@ const AssessmentResults = () => {
                 <BarChart 
                   data={chartData} 
                   layout="vertical" 
-                  margin={{ top: 20, right: 200, left: 120, bottom: 30 }}
+                  margin={{ top: 20, right: 220, left: 120, bottom: 30 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
                   <XAxis 
@@ -277,12 +403,12 @@ const AssessmentResults = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {traitDescriptions.map((trait) => {
-            const score = scores[trait.trait as keyof OceanScores];
+            const percentageScore = scores[trait.trait as keyof OceanScores];
             const rawScore = rawScores[trait.trait as keyof typeof rawScores];
-            const description = getTraitDescription(trait.trait, score);
-            const category = getScoreCategory(score);
-            const scoreRangeBand = getScoreRangeBand(score);
-            const scaledScore = calculateScaledScore(rawScore, trait);
+            const description = getTraitDescription(trait.trait, percentageScore);
+            const category = getScoreCategory(percentageScore, trait);
+            const scoreRangeBand = getScoreRangeBand(percentageScore, trait);
+            const scaledScore = calculateScaledScore(percentageScore, trait);
             
             return (
               <Card key={trait.trait} className="w-full">
@@ -294,7 +420,7 @@ const AssessmentResults = () => {
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-xl">{trait.trait}</CardTitle>
                       <div className="text-2xl font-bold">
-                        {score}%
+                        {scaledScore}
                       </div>
                     </div>
                     <div className="flex justify-between items-center mt-2">
@@ -304,7 +430,7 @@ const AssessmentResults = () => {
                       </div>
                     </div>
                     <div className="text-sm mt-1">
-                      Raw score: {rawScore}/{trait.maxScore} ≈ {scaledScore}/{trait.scaledMax} on standard scale
+                      Raw score: {rawScore}/{trait.maxScore} ≈ {scaledScore} on standard scale
                     </div>
                   </div>
                 </CardHeader>
@@ -325,23 +451,74 @@ const AssessmentResults = () => {
           })}
         </div>
 
+        {/* Trait Combinations Section */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Trait Combinations</CardTitle>
+            <CardDescription>
+              How your personality traits interact with each other can reveal deeper insights into your behavior patterns.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {combinationScores.map((combo, index) => (
+                <div key={index} className="p-4 border rounded-lg bg-slate-50 dark:bg-slate-800">
+                  <h3 className="text-lg font-semibold mb-2">
+                    {combo.traits.join(" & ")}
+                  </h3>
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="text-sm text-muted-foreground">Score</span>
+                    <span className={`text-lg font-medium ${combo.inRange ? 'text-green-600' : 'text-gray-600'}`}>
+                      {combo.score} / {combo.minScaledScore}-{combo.maxScaledScore}
+                    </span>
+                  </div>
+                  <p>{combo.description}</p>
+                </div>
+              ))}
+              
+              {/* Global Analysis */}
+              <div className="p-4 border rounded-lg bg-slate-50 dark:bg-slate-800 md:col-span-2">
+                <h3 className="text-lg font-semibold mb-2">
+                  Global Analysis
+                </h3>
+                <div className="flex justify-between items-center mb-3">
+                  <span className="text-sm text-muted-foreground">Overall Score</span>
+                  <span className={`text-lg font-medium ${globalScoreInRange ? 'text-green-600' : 'text-gray-600'}`}>
+                    {globalScore} / {globalAnalysis.minScaledScore}-{globalAnalysis.maxScaledScore}
+                  </span>
+                </div>
+                <p>{globalAnalysis.description}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         <Card className="mb-8">
           <CardHeader>
             <CardTitle>Understanding Your Results</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="mb-4">
-              The OCEAN personality assessment measures five key personality traits. Your scores reflect where you fall on the spectrum for each trait:
+              The OCEAN personality assessment measures five key personality traits. Your scores are mapped to specialized ranges that provide deeper insights:
             </p>
             <ul className="list-disc pl-6 space-y-2">
-              <li><strong>76-100%:</strong> You have a high level of this trait</li>
-              <li><strong>51-75%:</strong> You have a moderately high level of this trait</li>
-              <li><strong>26-50%:</strong> You have a moderately low level of this trait</li>
-              <li><strong>0-25%:</strong> You have a low level of this trait</li>
+              <li><strong>Openness:</strong> Typically scored on a 76-100 scale for high scores</li>
+              <li><strong>Conscientiousness:</strong> Typically scored on a 51-75 scale for high scores</li>
+              <li><strong>Extraversion:</strong> Typically scored on a 76-100 scale for high scores</li>
+              <li><strong>Agreeableness:</strong> Typically scored on a 76-100 scale for high scores</li>
+              <li><strong>Neuroticism:</strong> Typically scored on a 51-75 scale for high scores</li>
             </ul>
             <p className="mt-4">
-              Your raw scores (what you answered on our assessment) have been scaled to match industry-standard scoring ranges, 
-              allowing for better comparison with other personality assessments that may use different question counts.
+              We've also analyzed combinations of traits, which can reveal more complex aspects of your personality:
+            </p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li><strong>Openness & Extraversion:</strong> Scored on a 150-200 scale</li>
+              <li><strong>Conscientiousness & Neuroticism:</strong> Scored on a 100-150 scale</li>
+              <li><strong>Agreeableness & Conscientiousness:</strong> Scored on a 150-200 scale</li>
+              <li><strong>Global Analysis:</strong> Scored on a 400-500 scale, representing your overall personality profile</li>
+            </ul>
+            <p className="mt-4">
+              Your raw scores (what you answered on our assessment) have been mathematically scaled to match the specialized scoring system used by professional personality assessments that typically use 300+ data points.
             </p>
             <p className="mt-4">
               Remember that there are no "good" or "bad" scores. Each trait combination creates a unique personality profile with its own strengths and challenges.
